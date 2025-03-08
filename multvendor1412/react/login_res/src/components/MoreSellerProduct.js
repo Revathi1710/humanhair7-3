@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import EnquiryModal from './EnquiryMode';
 import { Link } from 'react-router-dom';
 
-const RelatedProduct = ({ categoryId, productId }) => { 
+const MoreSellerProduct = ({ vendorId,productId }) => { 
   const [products, setProducts] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -54,13 +54,10 @@ const RelatedProduct = ({ categoryId, productId }) => {
     };
  
     const fetchProducts = async () => {
-      if (!categoryId || !productId) {
-        setMessage("Invalid category or product ID");
-        return;
-      }
+     
 
       try {
-        let url = `${process.env.REACT_APP_API_URL}/getRelatedProductsByCategory2/${categoryId}/${productId}`;
+        let url = `${process.env.REACT_APP_API_URL}/getMoreSellerProduct/${vendorId}/${productId}`;
         const response = await axios.get(url);
         const data = response.data;
 
@@ -79,7 +76,7 @@ const RelatedProduct = ({ categoryId, productId }) => {
 
     fetchProducts();
     fetchUserData();
-  }, [categoryId, productId]); // ✅ Added dependencies
+  }, []); 
 
   const handleEnquiryClick = (product) => {
     setSelectedProduct(product);
@@ -96,6 +93,7 @@ const RelatedProduct = ({ categoryId, productId }) => {
       </span>
     );
   };
+ 
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -105,6 +103,7 @@ const RelatedProduct = ({ categoryId, productId }) => {
   return (
     <div className="container14 mt-4">
       <div className="row">
+        
         {products.map((product, index) => (
           <div key={index} className="col-lg-2 col-md-4 col-sm-6 mb-4 related-product-card">
             <div className="card h-100">
@@ -120,18 +119,8 @@ const RelatedProduct = ({ categoryId, productId }) => {
                   <h5 className='feacture-product-name'>{product.name}</h5>
                 </Link>
 
-                {product.vendorDetails ? (
-                  <>
-                    {product.vendorDetails.businessName && (
-                      <div className="companydetails companyname mt-4">
-                        <h6 style={{ color: "black" }}>Brand Name:</h6>
-                        {maskBusinessName(product.vendorDetails.businessName)}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="companydetails mt-4 text-muted">Vendor details unavailable</div>
-                )}
+               
+              
 
                 <button type="submit" name="Enquiry" className="mt-4 submit-btn" onClick={() => handleEnquiryClick(product)}>
                   Send Inquiry  &nbsp;<i className="fas fa-paper-plane"></i>
@@ -154,4 +143,4 @@ const RelatedProduct = ({ categoryId, productId }) => {
   );
 };
 
-export default RelatedProduct;
+export default MoreSellerProduct;

@@ -131,6 +131,63 @@ box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .list_sidebar{
 position: relative;
+
+}
+.vendor-sidebarmobile-menu{
+  display: none;
+}
+.mobiles-vendor-sidebar{
+  display: none;
+}
+
+
+@media only screen and (max-width: 768px){
+  .desktop-vendor-sidebar{
+    display: none;
+  }
+
+  .vendor-sidebarmobile-menu {
+    display: block;
+    text-align: left;
+}
+.usermenu-bar-vendor {
+  /* position: absolute; */
+  background: rgb(129, 149, 165);
+  border-radius: 50%;
+  padding: 5px;
+}
+.mobiles-vendor-sidebar{
+  display: block;
+}
+/* Sidebar container */
+.mobiles-vendor-sidebar {
+  position: fixed;
+  left: -250px; /* Initially hidden */
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+  padding-top: 0px;
+}
+.overlay{
+  background: white;
+  width: 250px;
+  height: 100%;
+}
+
+/* Show sidebar when active */
+.mobiles-vendor-sidebar.active {
+  left: 0;
+}
+.list {
+  background-color: white;
+  padding: 8px;
+  text-align: left;
+  margin: px;
+  box-shadow: none;
+}
 }
 
 

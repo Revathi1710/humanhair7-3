@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/navbar';
 import RelatedProduct from '../components/RelatedProduct';
+import MoreSellerProduct from '../components/MoreSellerProduct';
 import axios from 'axios';
 import './productview.css';
 
@@ -183,17 +184,18 @@ const ProductView = () => {
               <p className="description">{product.description}</p>
             </div>
                 </div>
-              </div>
+             
               <div className='product-related mt-3 px-3'>
         <h3 className='productrecent'>Related Products </h3>
-        <RelatedProduct categoryId={product.category}/> 
+        <RelatedProduct categoryId={product.category} productId={product._id}/> 
       </div>
       <div className='product-related mt-3 px-3'>
         <h3 className='productrecent'>More Product From This seller</h3>
-         <RelatedProduct /> 
-      </div>
+         <MoreSellerProduct  vendorId={product.vendorId._id} productId={product._id} /> 
+      </div> </div>
             </div>
             <div className="col-md-3 sellerDetails">
+              
              
               <div className="seller">
                 <h5>Seller Details</h5>

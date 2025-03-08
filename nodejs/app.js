@@ -1965,7 +1965,7 @@ app.post('/AdminVendorEnquiry', async (req, res) => {
 app.get('/getProductsByCategory/:category', async (req, res) => {
   try {
     const categoryName = req.params.category; // Capture the category name from the URL
-    console.log(`Received Category: ${categoryName}`);
+
 
     if (!categoryName) {
       return res.status(400).json({ status: 'error', message: 'Category name is missing' });
@@ -2590,6 +2590,118 @@ app.get('/getFeactureProductsHome', async (req, res) => {
     res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 });
+app.get('/getRelatedProductsByCategory/:category', async (req, res) => {
+  try {
+    const categoryName = req.params.category; // Capture the category name from the URL
+
+
+    if (!categoryName) {
+      return res.status(400).json({ status: 'error', message: 'Category name is missing' });
+    }
+
+    // Fetch products matching the category name and populate the vendorId field
+    const products = await Product.find({ category: categoryName }).populate('vendorId');
+
+    if (products.length > 0) {
+      res.json({ status: 'ok', data: products });
+    } else {
+      res.status(404).json({ status: 'error', message: 'No products found in this category' });
+    }
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+});
+
+
+
+
+app.get('/getRelatedProductsByCategory2/:category/:product', async (req, res) => { 
+  try {
+    const categoryId = req.params.category;  
+    const productId = req.params.product;  
+
+    // Validate category ID and product ID
+    if (!mongoose.Types.ObjectId.isValid(categoryId) || !mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid category or product ID' });
+    }
+
+    const products = await Product.aggregate([
+      {
+        $match: {
+          category: new mongoose.Types.ObjectId(categoryId),
+          _id: { $ne: new mongoose.Types.ObjectId(productId) } // Exclude the given productId
+        }
+      },
+      {
+        $lookup: {
+          from: 'vendor', // Ensure this matches your actual collection name
+          let: { vendorId: { $toObjectId: "$vendorId" } }, // Convert vendorId to ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$vendorId"] } } }
+          ],
+          as: 'vendorDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: '$vendorDetails',
+          preserveNullAndEmptyArrays: true // Keep products even if vendor info is missing
+        }
+      }
+    ]);
+
+    if (!products.length) {
+      return res.status(404).json({ status: 'error', message: 'No related products found' });
+    }
+
+    res.json({ status: 'ok', data: products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+});
+app.get('/getMoreSellerProduct/:vendor/:product', async (req, res) => { 
+  try {
+    const vendorId = req.params.vendor;
+    const productId = req.params.product;   // Optional: Exclude specific productId
+    const products = await Product.aggregate([
+      {
+        $match: {
+          vendorId: new mongoose.Types.ObjectId(vendorId),
+      _id: { $ne: new mongoose.Types.ObjectId(productId) }  // Exclude the given productId
+        }
+      },
+      {
+        $lookup: {
+          from: 'vendor', // Ensure this matches your actual collection name
+          let: { vendorId: { $toObjectId: "$vendorId" } }, // Convert vendorId to ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$vendorId"] } } }
+          ],
+          as: 'vendorDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: '$vendorDetails',
+          preserveNullAndEmptyArrays: true // Keep products even if vendor info is missing
+        }
+      }
+    ]);
+    
+
+    if (!products.length) {
+      return res.status(404).json({ status: 'error', message: 'No related products found' });
+    }
+
+    res.json({ status: 'ok', data: products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ status: 'error', message: 'Internal server error' });
+  }
+});
+
+
 
 
 //status update 
