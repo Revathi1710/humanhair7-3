@@ -4,6 +4,13 @@
 .sidebar-toggle {
   margin-left: -240px;
 }
+.active-menu {
+  background-color: #2a89ff !important;
+ 
+}
+.active-menu  a{
+  color: white !important;
+}
 .sidebar {
   width: 240px;
   height: 100%;
@@ -87,3 +94,37 @@
     align-content:center;
     justify-content:center;
 }
+.message-container{
+
+
+  position: relative;
+  height: 50px;
+}
+.message-content{
+  background-color: green;
+  color: white;
+  font-weight: 800;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex
+;
+position:absolute;
+  width: 35%;
+  position: absolute;
+  right: 0px;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 0.5sease-in-out;
+}
+.editbtn-admin{
+color: #006097;
+   background-color: #84d2ff;
+   border-color: #0085d1;
+ 
+}
+.deletebtn-admin{
+  color: #970000;
+  background-color: hwb(0deg 55.17% 0%);
+  border-color: #970000; 
+   
+  }

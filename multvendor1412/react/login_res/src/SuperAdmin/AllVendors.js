@@ -58,9 +58,11 @@ const Alluser = () => {
 
   return (
     <div>
-      <Sidebar />
-      <div style={{ marginLeft: '250px' }} className='mt-5'>
-        <h3>All Customers</h3>
+    <Sidebar />
+    <div className="add-category-container">
+        <div className="title">
+        <h2 className='mb-4'>All Sellers</h2>
+        </div>
         {message && <p>{message}</p>}
         {vendors.length > 0 ? (
           <table className="table table-striped">
@@ -72,6 +74,7 @@ const Alluser = () => {
                 <th>Company Name</th>
                 <th>Number</th>
                 <th>Date Added</th>
+                <th>Approved </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -91,6 +94,11 @@ const Alluser = () => {
                   <td>{vendor.businessName}</td>
                   <td>{vendor.number}</td>
                   <td>{new Date(vendor.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</td>
+                  <td> <span className={`badge ${vendor.approved ? 'bg-success' : 'bg-danger'}`}>
+                      {vendor.approved ? 'Approved' : 'Reject'}
+                    </span></td>
+                
+                  
                   <td>
                     <button
                       className="btn btn-primary btn-sm mt-2 mb-2 width-100"

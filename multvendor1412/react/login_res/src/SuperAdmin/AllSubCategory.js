@@ -6,7 +6,10 @@ import '../Vendors/table.css';
 const AllSubCategory = () => {
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState('');
-
+  const showMessage = (msg) => {
+    setMessage(msg);
+    setTimeout(() => setMessage(''), 5000); // Message disappears after 5 seconds
+  };
   useEffect(() => {
     // Fetch categories when the component mounts
     const fetchCategories = async () => {
@@ -42,6 +45,24 @@ const AllSubCategory = () => {
       setMessage('An error occurred: ' + error.message);
     }
   };
+  const handleUpdateActive = async (id, currentStatus) => {
+    try {
+      const updatedStatus = !currentStatus;
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/updateStatusSubcategory/${id}`, { active: updatedStatus });
+      const data = response.data;
+
+      if (data.status === 'ok') {
+        setCategories(categories.map(category => 
+          category._id === id ? { ...category, active: updatedStatus } : category
+        ));
+        showMessage('Subcategory status updated successfully.');
+      } else {
+        showMessage(data.message);
+      }
+    } catch (error) {
+      showMessage('An error occurred: ' + error.message);
+    }
+  };
 
   const handleUpdate = (id) => {
     // Implement your update logic here
@@ -53,16 +74,38 @@ const AllSubCategory = () => {
     <div>
     <Sidebar />
     <div className="add-category-container">
-
-        <h4 className='mb-4'>All Subcategories</h4>
-        {message && <p>{message}</p>}
+       <div className='title'>
+       <h2 className='mb-4'>All Subcategories</h2>
+       </div>
+      
+       {message && (
+            <div className='message-container'>
+          <div className='message-content' >
+            <p style={{ margin: 0 }}>{message}</p>
+            <button 
+              onClick={() => setMessage('')} 
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "white",
+                fontSize: "16px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              ✖
+            </button>
+          </div> </div>
+        )}
         {categories.length > 0 ? (
           <table className="table table-striped">
             <thead>
               <tr>
+                <th>SI.No</th>
+              
                 <th>Image</th>
                 <th>Name</th>
-                
+               
                 
                
                 <th>Status</th>
@@ -71,8 +114,10 @@ const AllSubCategory = () => {
               </tr>
             </thead>
             <tbody>
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <tr key={category._id}>
+                   <td>{index + 1}</td> 
+                
                      <td>
                     {category.image ? (
                       <img
@@ -84,25 +129,34 @@ const AllSubCategory = () => {
                       <span>No Image</span>
                     )}
                   </td>
+                 
                   <td>{category.name}</td>
                  
                   <td>
-                    <span className={`badge ${category.active ? 'bg-success' : 'bg-danger'}`}>
-                      {category.active ? 'Active' : 'Inactive'}
-                    </span>
+                   
+                    <div className="form-check form-switch">
+                      <input 
+                        className="form-check-input"  
+                        type="checkbox" 
+                        id={`statusSwitch${category._id}`} 
+                        checked={category.active} 
+                        onChange={() => handleUpdateActive(category._id, category.active)}
+                      />
+                     
+                    </div>
                   </td>
                   <td>
                     <button
-                      className="btn btn-primary btn-sm me-2"
+                      className="btn btn-primary btn-sm me-2 editbtn-admin"
                       onClick={() => handleUpdate(category._id)}
                     >
-                      Update
+                     <i class='fas fa-edit'></i>   Update
                     </button>
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-danger btn-sm deletebtn-admin"
                       onClick={() => handleDelete(category._id)}
                     >
-                      Delete
+                      <i class='fas fa-trash'></i>  Delete
                     </button>
                   </td>
                 </tr>

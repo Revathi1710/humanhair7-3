@@ -125,10 +125,10 @@ const Allproducts = () => {
   };
   return (
     <div>
-      <Sidebar />
-      <div className="" style={{ marginLeft: '250px' }}>
+    <Sidebar />
+    <div className="add-category-container">
         <div className="title">
-          <h2>All Products</h2>
+          <h2 className='mb-4'>All Products</h2>
         </div>
         {message && <p>{message}</p>}
         {products.length > 0 ? (
@@ -140,6 +140,7 @@ const Allproducts = () => {
                 <th>Name</th>
                 <th>Status</th>
                 <th>Feature</th>
+                <th>Approved </th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -176,7 +177,7 @@ const Allproducts = () => {
                         onChange={() => handleUpdateActive(product._id, product.active)}
                       />
                       <label className="form-check-label" htmlFor={`statusSwitch${product._id}`}>
-                        {product.active ? 'Active' : 'Inactive'}
+                     
                       </label>
                     </div>
                   </td>
@@ -190,22 +191,25 @@ const Allproducts = () => {
                         onChange={() => handleUpdateFeature(product._id, product.feature)}
                       />
                       <label className="form-check-label" htmlFor={`featureSwitch${product._id}`}>
-                        {product.feature ? 'Featured' : 'Not Featured'}
+                       
                       </label>
                     </div>
                   </td>
+                  <td> <span className={`badge ${product.approved ? 'bg-success' : 'bg-danger'}`}>
+                      {product.approved ? 'Approved' : 'Reject'}
+                    </span></td>
                   <td>
                     <button
-                      className="btn btn-primary btn-sm me-2"
+                      className="btn btn-primary btn-sm me-2 editbtn-admin"
                       onClick={() => handleUpdate(product._id)}
                     >
-                      Update
+                    <i class='fas fa-edit'></i>  Update
                     </button>
                     <button
-                      className="btn btn-danger btn-sm"
+                      className="btn btn-danger btn-sm deletebtn-admin"
                       onClick={() => handleDelete(product._id)}
                     >
-                      Delete
+                    <i class='fas fa-trash'></i>  Delete
                     </button>
                     {expandedRows[product._id] && (
                       <div className='d-flex mt-3'>

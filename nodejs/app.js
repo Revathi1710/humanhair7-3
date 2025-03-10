@@ -1078,7 +1078,8 @@ app.post("/getVendorCategorycount", async (req, res) => {
                     productPrice: '$productDetails.price',
                     productImage: '$productDetails.image',
                     UserNumber: 1,
-                    Username: 1,
+                    Username: 1, 
+                    createdAt:1,
                     vendorName: '$vendorDetails.fname',
                     vendorEmail: '$vendorDetails.email',
                     vendorBusiness: '$vendorDetails.businessName'
@@ -1502,16 +1503,23 @@ app.get('/getServiceMain', async (req, res) => {
 });
 app.get('/getSubCategory', async (req, res) => {
   try {
-    const categories = await SubCategory.find();
-    if (!categories) {
-      return res.status(404).send({ status: 'error', message: 'No categories found' });
+    const subCategories = await SubCategory.find()
+      .populate({
+        path: 'Category',
+        select: 'name slug description active' // Adjust fields as needed
+      });
+
+    if (subCategories.length === 0) {
+      return res.status(404).json({ status: 'error', message: 'No subcategories found' });
     }
-    res.send({ status: 'ok', data: categories });
+
+    res.json({ status: 'ok', data: subCategories });
   } catch (error) {
-    console.error('Error fetching categories:', error);
-    res.status(500).send({ status: 'error', message: 'Internal server error' });
+    console.error('Error fetching subcategories:', error);
+    res.status(500).json({ status: 'error', message: 'Internal server error' });
   }
 });
+
 app.post("/addSlider", upload.single('image'), async (req, res) => {
   const { name, URL } = req.body;
 
@@ -2244,6 +2252,27 @@ app.put('/updateStatusCategory/:id', async (req, res) => {
     }
 
     const updatedCategory = await MainCategory.findByIdAndUpdate(id, { active }, { new: true });
+
+    if (!updatedCategory) {
+      return res.status(404).send({ status: 'error', message: 'Category not found' });
+    }
+
+    res.send({ status: 'ok', data: updatedCategory });
+  } catch (error) {
+    console.error('Error updating category:', error);
+    res.status(500).send({ status: 'error', message: 'Internal server error' });
+  }
+});
+app.put('/updateStatusSubcategory/:id', async (req, res) => {
+  const { id } = req.params;
+  const { active } = req.body;
+
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).send({ status: 'error', message: 'Invalid category ID format' });
+    }
+
+    const updatedCategory = await SubCategory.findByIdAndUpdate(id, { active }, { new: true });
 
     if (!updatedCategory) {
       return res.status(404).send({ status: 'error', message: 'Category not found' });

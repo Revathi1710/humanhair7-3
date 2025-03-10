@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react'; 
 import Sidebar from './sidebar'; 
 import axios from 'axios';
+import '../Vendors/table.css';
 
 const AllCategory = () => {
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState('');
-
+  const showMessage = (msg) => {
+    setMessage(msg);
+    setTimeout(() => setMessage(''), 5000); // Message disappears after 5 seconds
+  };
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -15,10 +19,10 @@ const AllCategory = () => {
         if (data.status === 'ok') {
           setCategories(data.data);
         } else {
-          setMessage(data.message);
+          showMessage(data.message);
         }
       } catch (error) {
-        setMessage('An error occurred: ' + error.message);
+        showMessage('An error occurred: ' + error.message);
       }
     };
 
@@ -40,11 +44,11 @@ const AllCategory = () => {
           setCategories(categories.filter(category => category._id !== categoryId));
           alert('Category deleted successfully');
         } else {
-          setMessage('Error deleting category: ' + data.message);
+          showMessage('Error deleting category: ' + data.message);
         }
       })
       .catch(error => {
-        setMessage('Error deleting category');
+        showMessage('Error deleting category');
       });
     }
   };
@@ -59,12 +63,12 @@ const AllCategory = () => {
         setCategories(categories.map(category => 
           category._id === id ? { ...category, active: updatedStatus } : category
         ));
-        setMessage('Category status updated successfully.');
+        showMessage('Category status updated successfully.');
       } else {
-        setMessage(data.message);
+        showMessage(data.message);
       }
     } catch (error) {
-      setMessage('An error occurred: ' + error.message);
+      showMessage('An error occurred: ' + error.message);
     }
   };
 
@@ -76,13 +80,36 @@ const AllCategory = () => {
     <div>
       <Sidebar />
       <div className="add-category-container">
-        <h1 className='mb-4'>All Categories</h1>
-        {message && <p>{message}</p>}
+        <div className='title'>
+        <h2 className='mb-4'>All Categories</h2>
+        </div>
+        
+          {/* Message Box with Transition & Close Button */}
+          {message && (
+            <div className='message-container'>
+          <div className='message-content' >
+            <p style={{ margin: 0 }}>{message}</p>
+            <button 
+              onClick={() => setMessage('')} 
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "white",
+                fontSize: "16px",
+                cursor: "pointer",
+                fontWeight: "bold",
+              }}
+            >
+              ✖
+            </button>
+          </div> </div>
+        )}
         {categories.length > 0 ? (
           <table className="table table-bordered text-center">
             <thead className="table-dark">
               <tr>
                 <th>SI.No</th>
+                <th>Create at</th>
                 <th>Image</th>
                 <th>Name</th>
                 <th>Slug</th>
@@ -94,6 +121,7 @@ const AllCategory = () => {
               {categories.map((category, index) => (
                 <tr key={category._id}>
                   <td>{index + 1}</td> {/* Serial Number */}
+                  <td>{new Date(category.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</td>
                   <td>
                     <img 
                        src={`${process.env.REACT_APP_API_URL}/${category.image.replace('\\', '/')}`}
@@ -116,11 +144,11 @@ const AllCategory = () => {
                     </div>
                   </td>
                   <td>
-                    <button className="btn btn-primary btn-sm me-2" onClick={() => handleUpdate(category._id)}>
-                      Update
+                    <button className="btn btn-primary btn-sm me-2 editbtn-admin" onClick={() => handleUpdate(category._id)}>
+                    <i class='fas fa-edit'></i> Update
                     </button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(category._id)}>
-                      Delete
+                    <button className="btn btn-danger btn-sm deletebtn-admin" onClick={() => handleDelete(category._id)}>
+                    <i class='fas fa-trash'></i>  Delete
                     </button>
                   </td>
                 </tr>

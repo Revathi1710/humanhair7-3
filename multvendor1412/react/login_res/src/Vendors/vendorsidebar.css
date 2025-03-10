@@ -6,12 +6,16 @@
 }
 .header{
     
-    background:#2a628d;
+    background:#002757;
     color:white;
     text-align:end;
     padding:10px;
     
 
+}
+.active-menu {
+  background-color: #2a89ff  !important;
+  color: white !important;
 }
 .Vendorprofile{
   height: 30px;
@@ -66,7 +70,7 @@ border-radius: 20px;
 .sidebar {
   width: 240px;
   height: 100%;
-  background:black;
+  background:#003870;
 
   text-align: left;
   position: fixed;
@@ -130,13 +134,8 @@ border-radius: 20px;
         margin-bottom: 0;
         margin-left: 0;
         margin-right: 0;
-        border-right:2px solid #71eff7;
-        a {
-          font-size: 12px;
-          padding-top: 13px;
-          padding-bottom: 13px;
-          color: #aeb2b7;
-        }
+        border-right:2px solid #c9c9c9;
+       
       }
     }
   }

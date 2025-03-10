@@ -30,9 +30,11 @@ const Alluser = () => {
 
   return (
     <div>
-      <Sidebar />
-      <div className="container table" style={{ marginLeft: '250px' }}>
-        <h1>All Users</h1>
+    <Sidebar />
+    <div className="add-category-container">
+       <div className='title'>
+        <h2 className='mb-4'>All Buyer</h2>
+        </div>
         {message && <p>{message}</p>}
         {users.length > 0 ? (
           <table className="table table-striped">
