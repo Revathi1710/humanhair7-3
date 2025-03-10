@@ -32,7 +32,7 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Ensure this matches your client-side URL
+  origin: 'https://leafy-pithivier-610a89.netlify.app', // Ensure this matches your client-side URL
   methods: ['GET', 'POST', 'DELETE', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200
